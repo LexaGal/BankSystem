@@ -1,5 +1,4 @@
 # Bank System with internet banking
-Course Work
 
 1. Database with clients data(client's info, money, cardID, PIN-code, procents, credit history),
 2. Clients accounts creation,
