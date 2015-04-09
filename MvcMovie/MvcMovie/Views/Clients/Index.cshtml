@@ -10,6 +10,11 @@
 
 <h2>Client</h2>
 
+@Html.ActionLink("Edit", "Edit", new {id = Model.ID})
+@Html.ActionLink("Delete", "Delete", new {id = Model.ID})
+
+      
+
 <table>
     <tr>
         <th>
@@ -28,6 +33,10 @@
             @Html.DisplayNameFor(model => model.AccountType)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.State.BankID)
+        </th>
+        
+        <th>
             @Html.DisplayNameFor(model => model.State.BankMoney)
         </th>
         <th>
@@ -40,7 +49,7 @@
             @Html.DisplayNameFor(model => model.State.CreditProcents)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CardID)
+            @Html.DisplayNameFor(model => model.State.CreditCardID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.State.PinCode)
@@ -66,8 +75,13 @@
             @Html.DisplayFor(model => model.AccountType)
         </td>
         <td>
+            @Html.DisplayFor(model => model.State.BankID)
+        </td>
+        
+        <td>
             @Html.DisplayFor(model => model.State.BankMoney)
         </td>
+        
         <td>
             @Html.DisplayFor(model => model.State.BankProcents)
         </td>
@@ -78,7 +92,7 @@
             @Html.DisplayFor(model => model.State.CreditProcents)
         </td>
         <td>
-            @Html.DisplayFor(model => model.State.CardID)
+            @Html.DisplayFor(model => model.State.CreditCardID)
         </td>
         <td>
             @Html.DisplayFor(model => model.State.PinCode)
@@ -88,11 +102,6 @@
             @Html.DisplayFor(model => model.State.CreditMoney)
         </td>
 
-        <td>
-            @Html.ActionLink("Edit", "Edit", new {id = Model.ID})
-            @Html.ActionLink("Delete", "Delete", new {id = Model.ID})
-
-        </td>
     </tr>
 </table>        
  

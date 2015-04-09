@@ -16,10 +16,14 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
+    
     <fieldset>
         <legend>Movie</legend>
 
-        @Html.HiddenFor(model => model.ID)
+        <div class="editor-label">
+            @Html.HiddenFor(model => model.ID)
+        </div>
+        
 
         <div class="editor-label">
             @Html.LabelFor(model => model.FirstName)
@@ -62,34 +66,7 @@
             @Html.ValidationMessageFor(model => model.AccountType)
         </div>
 
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.State.CardID)
-        </div>
-
-        <div class="editor-field">
-            @Html.HiddenFor(model => model.State.PinCode)
-        </div>
-        <div class="editor-field">
-            @Html.HiddenFor(model => model.State.CreditMoney)
-        </div>
-
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.State.BankMoney)
-        </div>
-
-        <div class="editor-field">
-            @Html.HiddenFor(model => model.State.BankProcents)
-        </div>
-        
-        <div class="editor-label">
-            @Html.HiddenFor(model => model.State.CreditMoney)
-        </div>
-
-        <div class="editor-field">
-            @Html.HiddenFor(model => model.State.CreditProcents)
-        </div>
-
-        <p>
+         <p>
             <input type="submit" value="Save" />
         </p>
     </fieldset>
@@ -100,6 +77,6 @@
 }
 
 <div>
-    @Html.ActionLink("Back", "Index", new RouteValueDictionary(Model))
+    @Html.ActionLink("Back", "Index", Model)
 </div>
 

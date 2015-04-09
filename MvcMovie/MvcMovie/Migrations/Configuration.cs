@@ -27,8 +27,8 @@ namespace MvcMovie.Migrations
                       AccountType = "Usual",
                       State = new AccountState()
                       {
-                          PinCode = rnd.Next(1000, 9999).ToString(),
-                          CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                           
+                           
                           BankMoney = rnd.Next(1000000, 100000000),
                           BankProcents = rnd.Next(1, 25)
                           
@@ -44,8 +44,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -61,8 +61,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -78,8 +78,8 @@ namespace MvcMovie.Migrations
                    AccountType = "Usual",
                    State = new AccountState()
                    {
-                       PinCode = rnd.Next(1000, 9999).ToString(),
-                       CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                        
+                        
                        BankMoney = rnd.Next(1000000, 100000000),
                        BankProcents = rnd.Next(1, 25)
 
@@ -94,8 +94,8 @@ namespace MvcMovie.Migrations
                       AccountType = "Usual",
                       State = new AccountState()
                       {
-                          PinCode = rnd.Next(1000, 9999).ToString(),
-                          CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                           
+                           
                           BankMoney = rnd.Next(1000000, 100000000),
                           BankProcents = rnd.Next(1, 25)
 
@@ -111,8 +111,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -128,8 +128,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -145,8 +145,8 @@ namespace MvcMovie.Migrations
                    AccountType = "Usual",
                    State = new AccountState()
                    {
-                       PinCode = rnd.Next(1000, 9999).ToString(),
-                       CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                        
+                        
                        BankMoney = rnd.Next(1000000, 100000000),
                        BankProcents = rnd.Next(1, 25)
 
@@ -161,8 +161,8 @@ namespace MvcMovie.Migrations
                       AccountType = "Usual",
                       State = new AccountState()
                       {
-                          PinCode = rnd.Next(1000, 9999).ToString(),
-                          CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                           
+                           
                           BankMoney = rnd.Next(1000000, 100000000),
                           BankProcents = rnd.Next(1, 25)
 
@@ -178,8 +178,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -195,8 +195,8 @@ namespace MvcMovie.Migrations
                      AccountType = "Usual",
                      State = new AccountState()
                      {
-                         PinCode = rnd.Next(1000, 9999).ToString(),
-                         CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                          
+                          
                          BankMoney = rnd.Next(1000000, 100000000),
                          BankProcents = rnd.Next(1, 25)
 
@@ -212,8 +212,8 @@ namespace MvcMovie.Migrations
                    AccountType = "Usual",
                    State = new AccountState()
                    {
-                       PinCode = rnd.Next(1000, 9999).ToString(),
-                       CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                        
+                        
                        BankMoney = rnd.Next(1000000, 100000000),
                        BankProcents = rnd.Next(1, 25)
 
@@ -228,8 +228,8 @@ namespace MvcMovie.Migrations
                     AccountType = "Usual",
                     State = new AccountState()
                     {
-                        PinCode = rnd.Next(1000, 9999).ToString(),
-                        CardID = Guid.NewGuid().ToString().Substring(0, 8),
+                         
+                         
                         BankMoney = rnd.Next(1000000, 100000000),
                         BankProcents = rnd.Next(1, 25)
 

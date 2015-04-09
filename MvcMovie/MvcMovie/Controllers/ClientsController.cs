@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Activities;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Services.Description;
@@ -16,26 +19,23 @@ namespace MvcMovie.Controllers
 {
     public class ClientsController : Controller
     {
+        public static ClientsDbContext DataBase = new ClientsDbContext();
         
-        private ClientsDbContext db = new ClientsDbContext();
-
-        //
-        // GET
-
         public ActionResult Index(RouteValueDictionary rvd)
         {
-            
             object x;
             rvd.TryGetValue("id", out x);
             
             Client client = new Client();
-            client = db.Clients.Find(int.Parse(x.ToString()));
+            if (x != null)
+            {
+                client = DataBase.Clients.Find(int.Parse(x.ToString()));
+            }
 
             return View(client);
         }
 
-        //
-        // GET
+        //-------------------------------------------------------------------------------------------------
 
         public ActionResult LogIn()
         {
@@ -43,9 +43,7 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // POST
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogIn(Client client)
@@ -58,12 +56,12 @@ namespace MvcMovie.Controllers
                 {
                     return RedirectToAction("Index", "Admin");
                 }
-
-
-                var clients = from d in db.Clients
-                         where d.FirstName == client.FirstName &&
-                         d.SecondName == client.SecondName &&
-                         d.Password == client.Password
+                
+                var c = client;
+                var clients = from d in DataBase.Clients
+                         where d.FirstName == c.FirstName &&
+                         d.SecondName == c.SecondName &&
+                         d.Password == c.Password
                          select d;
 
                 if (clients.Count() == 1)
@@ -71,19 +69,17 @@ namespace MvcMovie.Controllers
                     client = clients.First();
 
                     RouteValueDictionary rvd = new RouteValueDictionary(client);
+                
                     return  RedirectToAction("Index", "Clients", rvd);
                 }
-
-                 //return new HttpNotFoundResult();
-            
+                
                 ModelState.AddModelError("Password" ,"Some data is wrong");
             }
 
             return View(client);
         }
 
-        //
-        // GET: /Clients/Details/
+        //-------------------------------------------------------------------------------------------------
 
         public ActionResult Details(int? id)
         {
@@ -92,7 +88,7 @@ namespace MvcMovie.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             } 
 
-            Client client = db.Clients.Find(id);
+            Client client = DataBase.Clients.Find(id);
             if (client == null)
             {
                 return HttpNotFound();
@@ -100,8 +96,7 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // GET: /Clients/Create
+        //-------------------------------------------------------------------------------------------------
 
         public ActionResult Create()
         {
@@ -110,21 +105,24 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // POST: /Clients/Create
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Client client)
         {
-            client.State.PinCode = (new Random()).Next(1000, 9999).ToString();
-            client.State.CardID = Guid.NewGuid().ToString().Substring(0, 8);
-            client.State.BankProcents = (new Random()).Next(1, 25);
-
             if (ModelState.IsValid)
             {
-                db.Clients.Add(client);
-                db.SaveChanges();
+                List<Client> list = DataBase.Clients.ToList();
+                var bankClient = list.Any(p => String.CompareOrdinal(p.Email, client.Email) == 0);
+                
+                if (bankClient)
+                {
+                    ModelState.AddModelError("Email", "Such email is already used");
+                    return View(client);
+                }
+                
+                DataBase.Clients.Add(client);
+                DataBase.SaveChanges();
 
                 RouteValueDictionary rvd = new RouteValueDictionary(client);
                     
@@ -134,12 +132,11 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // GET: /Clients/Edit/5
-
+        //-------------------------------------------------------------------------------------------------
+        
         public ActionResult Edit(int id = 0)
         {
-            Client client = db.Clients.Find(id);
+            Client client = DataBase.Clients.Find(id);
             if (client == null)
             {
                 return HttpNotFound();
@@ -148,32 +145,50 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // POST: /Clients/Edit/5
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(RouteValueDictionary rvd)
+        public ActionResult Edit(FormCollection client)
         {
-            object x;
-            rvd.TryGetValue("id", out x);
-                
             if (ModelState.IsValid)
             {
-                db.Entry(db.Clients.Find(x)).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index", rvd);
+                int id = int.Parse(client["id"]);
+
+                Client currClient = DataBase.Clients.ToList().First(c => c.ID == id);
+
+                List<Client> list = DataBase.Clients.ToList();
+                var bankClient = list.Any(p => String.CompareOrdinal(p.Email, client["Email"]) == 0 && p.ID != id);
+
+                if (bankClient)
+                {
+                    ModelState.AddModelError("Email", "Such email is already used");
+                    return View("Edit", currClient);
+                }
+
+
+                if (currClient != null)
+                {
+                    currClient.FirstName = client["FirstName"];
+                    currClient.SecondName = client["SecondName"];
+                    currClient.Email = client["Email"];
+                    currClient.Password = client["Password"];
+                    currClient.AccountType = client["AccountType"];
+                }
+
+                DataBase.Entry(currClient).State = EntityState.Modified;
+                DataBase.SaveChanges();
+
+                return RedirectToAction("Index", "Clients", new RouteValueDictionary(currClient));
             }
-            
-            return View(db.Clients.Find(x));
+
+            return View(DataBase.Clients.Find(client));
         }
 
-        //
-        // GET: /Clients/Delete/5
+        //-------------------------------------------------------------------------------------------------
 
         public ActionResult Delete(int id = 0)
         {
-            Client client = db.Clients.Find(id);
+            Client client = DataBase.Clients.Find(id);
             
             if (client == null)
             {
@@ -183,33 +198,33 @@ namespace MvcMovie.Controllers
             return View(client);
         }
 
-        //
-        // POST: /Clients/Delete/5
-
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
+            Client client = DataBase.Clients.Find(id);
             
-            db.Clients.Remove(client);
-            db.SaveChanges();
+            DataBase.Clients.Remove(client);
+            DataBase.SaveChanges();
             
             return RedirectToAction("LogIn");
         }
+
+        //-------------------------------------------------------------------------------------------------
 
         public ActionResult SearchIndex(string secondName, string firstName)
         {
             var namesList = new List<string>();
 
-            var namesQry = from d in db.Clients
+            var namesQry = from d in DataBase.Clients
                            orderby d.SecondName
                            select d.SecondName;
             
             namesList.AddRange(namesQry.Distinct());
             ViewBag.secondName = new SelectList(namesList);
 
-            var clients = from m in db.Clients
+            var clients = from m in DataBase.Clients
                          select m;
 
             if (!String.IsNullOrEmpty(firstName))
@@ -221,8 +236,7 @@ namespace MvcMovie.Controllers
             {
                 if (!clients.Any())
                 {
-                    return new EmptyResult();
-                    //ModelState.AddModelError("secondName", "No clients found. Some data is wrong");
+                    ModelState.AddModelError("secondName", "No clients found. Some data is wrong");
                 }
                 return View(clients);
             }
@@ -230,17 +244,69 @@ namespace MvcMovie.Controllers
             var returnClients = clients.Where(x => x.SecondName == secondName);
             if (!returnClients.Any())
             {
-                return new EmptyResult();
+                ModelState.AddModelError("secondName", "No clients found. Some data is wrong");
             }
 
-            return View(clients);
+            return View(returnClients);
             
         }
 
+        //-------------------------------------------------------------------------------------------------
+
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
-            base.Dispose(disposing);
+            //DataBase.Dispose();
+            //base.Dispose(disposing);
+        }
+
+        //-------------------------------------------------------------------------------------------------
+
+        public ActionResult Operations()
+        {
+            return View();
+        }
+
+        public ActionResult PutMoney()
+        {
+            Client client = new Client();
+            int sum = 0;
+            Tuple<Client, int> tuple = new Tuple<Client, int>(client, sum);
+
+            return View(tuple);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PutMoney(Tuple<Client, int> tuple)
+        {
+            List<Client> list = DataBase.Clients.ToList();
+
+            var bankClient = list.First(p => String.CompareOrdinal(p.State.BankID, tuple.Item1.State.BankID) == 0);
+
+            if (bankClient == null)
+            {
+                ModelState.AddModelError("BankID", "No such ID");
+                return View(tuple);
+            }
+
+            if (tuple.Item2 <= 0 || tuple.Item2 > 100000000)
+            {
+                ModelState.AddModelError("Summ to put: ", "Wrong summ");
+                return View(tuple);
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient);
+            moneyOperation.PutMoney(tuple.Item2);
+
+            DataBase.Entry(bankClient).State = EntityState.Modified;
+
+            return RedirectToAction("PutMoney", "Clients");
+        }
+
+        public ActionResult TransferMoney()
+        {
+            throw new NotImplementedException();
         }
     }
 }

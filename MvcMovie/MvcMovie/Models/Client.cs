@@ -16,7 +16,7 @@ namespace MvcMovie.Models
         }
 
         [Key]
-        public int ID { get; set; }
+        public int ID { get; private set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -35,6 +35,14 @@ namespace MvcMovie.Models
 
         public AccountState State { get; set; }
 
+        public void CopyDataFrom(Client client)
+        {
+            FirstName = client.FirstName;
+            SecondName = client.SecondName;
+            Email = client.Email;
+            Password = client.Password;
+
+        }
     }
 
 }

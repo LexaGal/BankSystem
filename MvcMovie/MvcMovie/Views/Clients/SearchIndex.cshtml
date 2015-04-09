@@ -52,7 +52,7 @@
             @Html.DisplayNameFor(model => model.State.CreditProcents)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CardID)
+            @Html.DisplayNameFor(model => model.State.CreditCardID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.State.PinCode)
@@ -91,7 +91,7 @@
             @Html.DisplayFor(modelItem => item.State.CreditProcents)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.CardID)
+            @Html.DisplayFor(modelItem => item.State.CreditCardID)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.State.PinCode)
@@ -102,8 +102,6 @@
         </td>
         
         <td>
-            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID })*@ 
-            @*@Html.ActionLink("Details", "Details", new { id=item.ID })*@ 
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })
         </td>
     </tr>

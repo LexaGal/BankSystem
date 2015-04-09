@@ -11,59 +11,6 @@
 <h2>Delete</h2>
 
 <h3>Are you sure you want to delete?</h3>
-@*<fieldset>
-    <legend>Client</legend>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.FirstName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FirstName)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.SecondName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.SecondName)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Email)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Email)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Password)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Password)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.AccountType)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.AccountType)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.State.PinCode)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State.PinCode)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.State.CardID)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State.CardID)
-    </div>
-</fieldset>*@
-
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     <p>

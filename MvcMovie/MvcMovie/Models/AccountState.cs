@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using System.Web.UI.WebControls;
-using ValidationContext = System.Activities.Validation.ValidationContext;
 
 namespace MvcMovie.Models
 {
     public class AccountState
     {
-        public string CardID { get; set; }
+        public string BankID { get; set; }
 
-        public string PinCode { get; set; }
+        public string CreditCardID { get; private set; }
+
+        public string PinCode { get; private set; }
 
         public int CardMoney { get; set; }
 
@@ -24,5 +20,26 @@ namespace MvcMovie.Models
 
         public int CreditProcents { get; set; }
 
+        public AccountState()
+        {
+            BankID = Guid.NewGuid().ToString().Substring(0, 8);
+
+            PinCode = (((Guid.NewGuid().ToString())[0]) % 10).ToString() + ((Guid.NewGuid().ToString())[0]) % 10 
+                + ((Guid.NewGuid().ToString())[0]) % 10 + ((Guid.NewGuid().ToString())[0]) % 10;
+
+            CreditCardID = Guid.NewGuid().ToString().Substring(0, 8);
+        }
+        
+        public AccountState(AccountState accountState)
+        {
+            BankID = accountState.BankID;
+            CreditCardID = accountState.CreditCardID;
+            PinCode = accountState.PinCode;
+            CardMoney = accountState.CardMoney;
+            BankMoney = accountState.BankMoney;
+            CreditMoney = accountState.CreditMoney;
+            BankProcents = accountState.BankProcents;
+            CreditProcents = accountState.CreditProcents;
+        }
     }
 }

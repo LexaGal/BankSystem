@@ -31,8 +31,13 @@
             @Html.DisplayNameFor(model => model.AccountType)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.State.BankID)
+        </th>
+        
+        <th>
             @Html.DisplayNameFor(model => model.State.BankMoney)
         </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.State.BankProcents)
         </th>
@@ -43,7 +48,7 @@
             @Html.DisplayNameFor(model => model.State.CreditProcents)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CardID)
+            @Html.DisplayNameFor(model => model.State.CreditCardID )
         </th>
         <th>
             @Html.DisplayNameFor(model => model.State.PinCode)
@@ -75,6 +80,10 @@
                 @Html.DisplayFor(modelItem => item.AccountType)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.State.BankID)
+            </td>
+            
+            <td>
                 @Html.DisplayFor(modelItem => item.State.BankMoney)
             </td>
             <td>
@@ -87,7 +96,7 @@
                 @Html.DisplayFor(modelItem => item.State.CreditProcents)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State.CardID)
+                @Html.DisplayFor(modelItem => item.State.CreditCardID )
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.State.PinCode)
