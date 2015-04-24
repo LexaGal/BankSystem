@@ -236,7 +236,21 @@ namespace MvcMovie.Migrations
                     }
                 }
            );
-            
+
+            context.Operations.AddOrUpdate(
+                new OperationLogger
+                {
+                    ID = 1,
+                    OperationType = "Put",
+                    SourceBankID = "2312reui",
+                    SourceCardID = "-",
+                    DestinationBankID = "-",
+                    DestinationCardID = "-",
+                    Money = 100000,
+                    GotCreditSum = 0,
+                    PaidCreditSum = 0,
+                });
+
         }
     }
 }

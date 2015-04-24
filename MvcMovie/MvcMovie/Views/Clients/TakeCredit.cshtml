@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "TakeCredit";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>Take credit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Put</legend>
+
+        <div class="editor-label">
+            @Html.Label("Bank ID: ")
+            @Html.Editor("BankID")
+        </div>
+
+        <div>
+            @Html.Label("Sum: ") 
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("Sum", new SelectList(
+                  new List<Object>{ "1000000", "2000000", "5000000", "10000000", "20000000", "50000000", "100000000"}))
+        </div>
+
+        <p>
+            <input type="submit" value="Take" />
+        </p>
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

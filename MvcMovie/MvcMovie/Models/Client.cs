@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -16,12 +16,14 @@ namespace MvcMovie.Models
         }
 
         [Key]
-        public int ID { get; private set; }
+        public int ID { get; set; }
 
         [Required]
+        [DisplayName("Name  ")]
         public string FirstName { get; set; }
 
         [Required]
+        [DisplayName("Surname  ")]
         public string SecondName { get; set; }
 
         [DataType(DataType.EmailAddress)]
@@ -31,16 +33,21 @@ namespace MvcMovie.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [DisplayName("Account  ")]
         public string AccountType { get; set; }
 
         public AccountState State { get; set; }
 
-        public void CopyDataFrom(Client client)
+        public Client(Client client)
         {
+            ID = client.ID;
             FirstName = client.FirstName;
             SecondName = client.SecondName;
             Email = client.Email;
             Password = client.Password;
+            AccountType = client.AccountType;
+
+            State = new AccountState(client.State);
 
         }
     }

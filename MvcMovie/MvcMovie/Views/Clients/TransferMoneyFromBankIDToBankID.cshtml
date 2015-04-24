@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "TransferMoneyFromBankIDToBankID";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>Transfer money from BankID to BankID</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Put</legend>
+
+        <div class="editor-label">
+            @Html.Label("Bank ID (From): ")
+            @Html.Editor("BankID1")
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Bank ID (To): ")
+            @Html.Editor("BankID2")
+        </div>
+        <div>
+            @Html.Label("Sum: ") 
+            @Html.Editor("Sum")
+        </div>
+        <p>
+            <input type="submit" value="Transfer" />
+        </p>
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

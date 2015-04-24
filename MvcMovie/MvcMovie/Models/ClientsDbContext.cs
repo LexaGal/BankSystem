@@ -9,5 +9,6 @@ namespace MvcMovie.Models
     public class ClientsDbContext : DbContext
     {
         public DbSet<Client> Clients { get; set; }
+        public DbSet<OperationLogger> Operations { get; set; }
     }
 }

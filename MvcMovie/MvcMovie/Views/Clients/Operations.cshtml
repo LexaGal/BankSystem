@@ -1,0 +1,25 @@
+﻿@using MvcMovie.Models
+@model MvcMovie.Models.Client
+
+@{
+    ViewBag.Title = "Operations";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>Operations</h2>
+
+<div>@Html.ActionLink("Put money", "PutMoney")</div>
+
+<div>@Html.ActionLink("Transfer money to Card", "TransferMoneyToCard")</div>
+
+<div>@Html.ActionLink("Transfer money from Card", "TransferMoneyFromCard")</div>
+
+<div>@Html.ActionLink("Transfer money from BankID to BankID", "TransferMoneyFromBankIDToBankID")</div>
+
+<div>@Html.ActionLink("Take credit", "TakeCredit")</div>
+
+<div>@Html.ActionLink("Pay credit", "PayCredit")</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

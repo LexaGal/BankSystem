@@ -1,0 +1,34 @@
+﻿@using MvcMovie.Models
+@model Client
+
+@{
+    ViewBag.Title = "PutMoney";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>Put money</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Put</legend>
+
+        <div class="editor-label">
+            @Html.Label("Bank ID: ")
+            @Html.Editor("BankID")
+        </div>
+
+        <div>
+            @Html.Label("Sum: ") 
+            @Html.Editor("Sum")
+        </div>
+        <p>
+            <input type="submit" value="Put" />
+        </p>
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

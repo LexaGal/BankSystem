@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using MvcMovie.Models
+@model MvcMovie.Models.Client
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -23,9 +26,14 @@
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("Operations", "Operations", "Clients")</li> 
-                            <li>@Html.ActionLink("LogOut", "LogIn","Clients") </li>
+
+                            <li>@Html.ActionLink("LogOut", "LogIn", "Clients") </li>
                         </ul>
+
+                        <div>
+                            You are logged in as @Html.DisplayFor(model => model.FirstName)
+                            @Html.DisplayFor(model => model.SecondName)
+                        </div>
                     </nav>
                 </div>
             </div>

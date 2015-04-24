@@ -1,0 +1,74 @@
+﻿@model MvcMovie.Models.ClientsList
+
+@{
+    ViewBag.Title = "View2";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>View2</h2>
+
+<fieldset>
+    <legend>ClientsList</legend>
+</fieldset>
+    @*@Html.ActionLink("Create New", "Create" )*@
+
+@using (Html.BeginForm("AllClients", "ClientsList", FormMethod.Get))
+{
+    <p>
+        name: @Html.TextBox("name", Model.Clients.First().FirstName)
+        surname: @Html.DropDownList("surname", "All")<br/>
+
+        <input type="submit" value="Filter"/>
+    </p>
+    <table>
+        <tr>
+            <th>
+                A
+                @*@Html.DisplayNameFor(model => model.FirstName)*@
+            </th>
+            <th>
+                B
+                @*@Html.DisplayNameFor(model => model.SecondName)*@
+            </th>
+            <th>
+                C
+                @*@Html.DisplayNameFor(model => model.Email)*@
+            </th>
+            <th>
+                D
+                @*@Html.DisplayNameFor(model => model.Password)*@
+            </th>
+            <th>
+                E
+                @*@Html.DisplayNameFor(model => model.AccountType)*@
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Clients)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SecondName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountType)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new {id = item.ID}) |
+                    @Html.ActionLink("Details", "Details", new {id = item.ID}) |
+                    @Html.ActionLink("Delete", "Delete", new {id = item.ID})*@
+                </td>
+            </tr>
+        }
+    </table>
+}

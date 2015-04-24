@@ -12,9 +12,13 @@ namespace MvcMovie.Controllers
 {
     public class AdminController : Controller
     {
-        
         public ActionResult Index()
         {
+            if (ClientsController.DataBase == null)
+            {
+                ClientsController.DataBase = new ClientsDbContext();
+            }
+
             return View(ClientsController.DataBase.Clients.ToList());
         }
 
@@ -114,7 +118,7 @@ namespace MvcMovie.Controllers
             Client client = ClientsController.DataBase.Clients.Find(id);
             ClientsController.DataBase.Clients.Remove(client);
             ClientsController.DataBase.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin");
         }
 
 

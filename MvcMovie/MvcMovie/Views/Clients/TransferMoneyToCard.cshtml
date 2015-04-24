@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "TransferMoneyToCard";
+    Layout = "~/Views/Clients/_Layout.cshtml";
+}
+
+<h2>Transfer money to Card</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Put</legend>
+
+        <div class="editor-label">
+            @Html.Label("Bank ID: ")
+            @Html.Editor("BankID")
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Credit Card ID: ")
+            @Html.Editor("CreditCardID")
+        </div>
+
+        <div>
+            @Html.Label("Sum: ") 
+            @Html.Editor("Sum")
+        </div>
+        <p>
+            <input type="submit" value="Transfer" />
+        </p>
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

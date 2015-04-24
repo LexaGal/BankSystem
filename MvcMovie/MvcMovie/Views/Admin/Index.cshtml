@@ -10,7 +10,7 @@
 
 <p>
     @Html.ActionLink("Create New", "Create", "Admin")
-    @Html.ActionLink("Search", "SearchIndex", "Clients")
+    @Html.ActionLink("Search", "AllClients", "ClientsList")
 
 </p>
 <table>
@@ -103,7 +103,7 @@
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.State.CreditMoney)
+                @Html.DisplayFor(modelItem => item.State.CardMoney)
             </td>
             
             <td>

@@ -19,8 +19,8 @@ namespace MvcMovie.Controllers
 {
     public class ClientsController : Controller
     {
-        public static ClientsDbContext DataBase = new ClientsDbContext();
-        
+        public static ClientsDbContext DataBase = new ClientsDbContext(); 
+
         public ActionResult Index(RouteValueDictionary rvd)
         {
             object x;
@@ -69,11 +69,14 @@ namespace MvcMovie.Controllers
                     client = clients.First();
 
                     RouteValueDictionary rvd = new RouteValueDictionary(client);
-                
+
+                    this.Session["client"] = client;
+
                     return  RedirectToAction("Index", "Clients", rvd);
                 }
                 
-                ModelState.AddModelError("Password" ,"Some data is wrong");
+                ModelState.AddModelError("Password" ,"Some fields are wrong");
+                
             }
 
             return View(client);
@@ -208,12 +211,12 @@ namespace MvcMovie.Controllers
             DataBase.Clients.Remove(client);
             DataBase.SaveChanges();
             
-            return RedirectToAction("LogIn");
+            return RedirectToAction("LogIn", "Clients");
         }
 
         //-------------------------------------------------------------------------------------------------
 
-        public ActionResult SearchIndex(string secondName, string firstName)
+        public ActionResult SearchIndex(string surname, string name)
         {
             var namesList = new List<string>();
 
@@ -222,32 +225,35 @@ namespace MvcMovie.Controllers
                            select d.SecondName;
             
             namesList.AddRange(namesQry.Distinct());
-            ViewBag.secondName = new SelectList(namesList);
+            ViewBag.surname = new SelectList(namesList.AsEnumerable());
 
-            var clients = from m in DataBase.Clients
-                         select m;
+            var clients = DataBase.Clients.AsEnumerable();
 
-            if (!String.IsNullOrEmpty(firstName))
+            if (!String.IsNullOrEmpty(name))
             {
-                clients = clients.Where(s => s.FirstName.Contains(firstName));
+                clients = clients.Where(s => s.FirstName.Contains(name));
             }
 
-            if (string.IsNullOrEmpty(secondName))
+            IEnumerable<Client> enumerable = clients as IList<Client> ?? clients.ToList();
+
+            if (string.IsNullOrEmpty(surname))
             {
-                if (!clients.Any())
+                if (!enumerable.Any())
                 {
-                    ModelState.AddModelError("secondName", "No clients found. Some data is wrong");
+                    ModelState.AddModelError("surname", "No clients found. Some data is wrong");
                 }
-                return View(clients);
+
+                return View(enumerable.ToArray());
             }
 
-            var returnClients = clients.Where(x => x.SecondName == secondName);
-            if (!returnClients.Any())
+             enumerable = enumerable.Where(x => x.SecondName == surname);
+
+            if (!enumerable.Any())
             {
-                ModelState.AddModelError("secondName", "No clients found. Some data is wrong");
+                ModelState.AddModelError("surname", "No clients found. Some data is wrong");
             }
 
-            return View(returnClients);
+            return View(enumerable.ToArray());
             
         }
 
@@ -268,45 +274,341 @@ namespace MvcMovie.Controllers
 
         public ActionResult PutMoney()
         {
-            Client client = new Client();
-            int sum = 0;
-            Tuple<Client, int> tuple = new Tuple<Client, int>(client, sum);
-
-            return View(tuple);
+            return View();
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PutMoney(Tuple<Client, int> tuple)
+        public ActionResult PutMoney(FormCollection form)
         {
+            string bankID = form["BankID"];
+            int sum = int.Parse(form["Sum"]);
+ 
             List<Client> list = DataBase.Clients.ToList();
 
-            var bankClient = list.First(p => String.CompareOrdinal(p.State.BankID, tuple.Item1.State.BankID) == 0);
+            var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0);
 
             if (bankClient == null)
             {
                 ModelState.AddModelError("BankID", "No such ID");
-                return View(tuple);
+                return View();
             }
 
-            if (tuple.Item2 <= 0 || tuple.Item2 > 100000000)
+            if (sum <= 0 || sum > 100000000)
             {
-                ModelState.AddModelError("Summ to put: ", "Wrong summ");
-                return View(tuple);
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
             }
 
             MoneyOperation moneyOperation = new MoneyOperation(bankClient);
-            moneyOperation.PutMoney(tuple.Item2);
+            moneyOperation.PutMoney(sum);
 
             DataBase.Entry(bankClient).State = EntityState.Modified;
 
-            return RedirectToAction("PutMoney", "Clients");
+            OperationLogger operation = new OperationLogger
+            {
+                OperationType = "Put",
+                SourceBankID = bankClient.State.BankID,
+                SourceCardID = "-",
+                DestinationBankID = "-",
+                DestinationCardID = "-",
+                GotCreditSum = 0,
+                PaidCreditSum = 0,
+                Money = sum
+            };
+
+            DataBase.Operations.Add(operation);
+            DataBase.SaveChanges();
+
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
         }
 
-        public ActionResult TransferMoney()
+
+        public ActionResult TransferMoneyToCard()
         {
-            throw new NotImplementedException();
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TransferMoneyToCard(FormCollection form)
+        {
+            string bankID = form["BankID"];
+            string creditCardID = form["CreditCardID"];
+            int sum = int.Parse(form["Sum"]);
+ 
+            List<Client> list = DataBase.Clients.ToList();
+
+            var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0
+                && String.CompareOrdinal(p.State.CreditCardID, creditCardID) == 0);
+
+            if (bankClient == null)
+            {
+                ModelState.AddModelError("CreditCardID", "Some field are wrong");
+                return View();
+            }
+
+            if (sum <= 0 || sum > 100000000 || sum > bankClient.State.BankMoney)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient);
+            moneyOperation.TrasferMoneyToCard(sum);
+
+            DataBase.Entry(bankClient).State = EntityState.Modified;
+
+            OperationLogger operation = new OperationLogger
+            {
+                OperationType = "Transfer",
+                SourceBankID = bankClient.State.BankID,
+                SourceCardID = "-",
+                DestinationBankID = "-",
+                DestinationCardID = bankClient.State.CreditCardID,
+                GotCreditSum = 0,
+                PaidCreditSum = 0,
+                Money = sum
+            };
+
+            DataBase.Operations.Add(operation);
+            DataBase.SaveChanges();
+
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
+        }
+
+
+        public ActionResult TransferMoneyFromCard()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TransferMoneyFromCard(FormCollection form)
+        {
+            string bankID = form["BankID"];
+            string creditCardID = form["CreditCardID"];
+            int sum = int.Parse(form["Sum"]);
+
+            List<Client> list = DataBase.Clients.ToList();
+
+            var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0
+                && String.CompareOrdinal(p.State.CreditCardID, creditCardID) == 0);
+
+            if (bankClient == null)
+            {
+                ModelState.AddModelError("CreditCardID", "Some field are wrong");
+                return View();
+            }
+
+            if (sum <= 0 || sum > 100000000 || sum > bankClient.State.CardMoney)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient);
+            moneyOperation.TrasferMoneyFromCard(sum);
+
+            DataBase.Entry(bankClient).State = EntityState.Modified;
+
+            OperationLogger operation = new OperationLogger
+            {
+                OperationType = "Transfer",
+                SourceBankID = "-",
+                SourceCardID = bankClient.State.CreditCardID,
+                DestinationBankID = bankClient.State.BankID,
+                DestinationCardID = "-",
+                GotCreditSum = 0,
+                PaidCreditSum = 0,
+                Money = sum
+            };
+
+            DataBase.Operations.Add(operation);
+            DataBase.SaveChanges();
+
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
+        }
+
+        public ActionResult TakeCredit()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TakeCredit(FormCollection form)
+        {
+            string bankID = form["BankID"];
+            int sum = int.Parse(form["Sum"]);
+
+            List<Client> list = DataBase.Clients.ToList();
+
+            var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0);
+
+            if (bankClient == null)
+            {
+                ModelState.AddModelError("BankID", "No such ID");
+                return View();
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient);
+            moneyOperation.TakeCredit(sum);
+
+            DataBase.Entry(bankClient).State = EntityState.Modified;
+
+            OperationLogger operation = new OperationLogger
+            {
+                OperationType = "Take",
+                SourceBankID = "-",
+                SourceCardID = "-",
+                DestinationBankID = bankClient.State.BankID,
+                DestinationCardID = "-",
+                GotCreditSum = sum,
+                PaidCreditSum = 0,
+                Money = 0
+            };
+
+            DataBase.Operations.Add(operation);
+            DataBase.SaveChanges();
+            
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
+
+        }
+
+
+        public ActionResult TransferMoneyFromBankIDToBankID()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult TransferMoneyFromBankIDToBankID(FormCollection form)
+        {
+            string bankID1 = form["BankID1"];
+            string BankID2 = form["BankID2"];
+            int sum = int.Parse(form["Sum"]);
+
+            List<Client> list = DataBase.Clients.ToList();
+
+            Client bankClient1 = null;
+            Client bankClient2 = null;
+            
+            try
+            {
+                bankClient1 = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID1) == 0);
+                bankClient2 = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, BankID2) == 0);
+            }
+            catch (Exception)
+            {
+                if (bankClient1 == null)
+                {
+                    ModelState.AddModelError("BankID1", "Field is wrong");
+                    return View();
+                }
+
+                if (bankClient2 == null)
+                {
+                    ModelState.AddModelError("BankID2", "Field is wrong");
+                    return View();
+                }
+            }
+
+            if (sum <= 0 || sum > 100000000 || sum > bankClient1.State.BankMoney)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient1);
+            moneyOperation.TransferMoneyFromBankIDToBankID(sum, bankClient2);
+
+            DataBase.Entry(bankClient1).State = EntityState.Modified;
+            DataBase.Entry(bankClient2).State = EntityState.Modified;
+
+            OperationLogger operation = new OperationLogger
+            {
+                OperationType = "Transfer",
+                SourceBankID = bankClient1.State.BankID,
+                SourceCardID = "-",
+                DestinationBankID = bankClient2.State.BankID,
+                DestinationCardID = "-",
+                GotCreditSum = 0,
+                PaidCreditSum = 0,
+                Money = sum
+            };
+
+            DataBase.Operations.Add(operation);
+            DataBase.SaveChanges();
+            
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient1));
+        }
+
+
+        public ActionResult PayCredit()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PayCredit(FormCollection form)
+        {
+            string bankID = form["BankID"];
+            int sum = int.Parse(form["Sum"]);
+
+            List<Client> list = DataBase.Clients.ToList();
+
+            var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0);
+
+            if (bankClient == null)
+            {
+                ModelState.AddModelError("BankID", "No such ID");
+                return View();
+            }
+
+            if (sum <= 0 || sum > 100000000 || sum > bankClient.State.BankMoney || sum > bankClient.State.CreditMoney)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+
+            MoneyOperation moneyOperation = new MoneyOperation(bankClient);
+            if (moneyOperation.PayCredit(sum))
+            {
+
+                DataBase.Entry(bankClient).State = EntityState.Modified;
+
+                OperationLogger operation = new OperationLogger
+                {
+                    OperationType = "Pay",
+                    SourceBankID = bankClient.State.BankID,
+                    SourceCardID = "-",
+                    DestinationBankID = "-",
+                    DestinationCardID = "-",
+                    GotCreditSum = 0,
+                    PaidCreditSum = sum,
+                    Money = 0
+                };
+
+                DataBase.Operations.Add(operation);
+                DataBase.SaveChanges();
+            }
+
+            else
+            {
+                ModelState.AddModelError("Sum", "Not enough money on your BankID");
+                return View();
+            }
+
+            return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
+
         }
     }
 }

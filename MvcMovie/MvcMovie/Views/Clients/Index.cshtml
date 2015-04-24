@@ -12,6 +12,7 @@
 
 @Html.ActionLink("Edit", "Edit", new {id = Model.ID})
 @Html.ActionLink("Delete", "Delete", new {id = Model.ID})
+@Html.ActionLink("Operations", "Operations", "Clients")
 
       
 
@@ -97,9 +98,8 @@
         <td>
             @Html.DisplayFor(model => model.State.PinCode)
         </td>
-
         <td>
-            @Html.DisplayFor(model => model.State.CreditMoney)
+            @Html.DisplayFor(model => model.State.CardMoney)
         </td>
 
     </tr>

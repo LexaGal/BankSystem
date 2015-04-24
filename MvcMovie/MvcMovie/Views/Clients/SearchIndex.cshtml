@@ -1,6 +1,7 @@
 ﻿@using System.Web.Mvc
 @using System.Web.Mvc.Html
-@model IEnumerable<MvcMovie.Models.Client>
+@using MvcMovie.Models
+@model Client[]
 @{
     Layout = "~/Views/Clients/_Layout.cshtml";
 }
@@ -9,7 +10,7 @@
     ViewBag.FirstName = "SearchIndex";
 }
 
-<h2>Search Clients</h2>
+<h2>Search clients</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create", "Admin")
@@ -17,9 +18,9 @@
     @using (Html.BeginForm("SearchIndex", "Clients", FormMethod.Get))
     {
         <p>
-            SecondName: @Html.DropDownList("secondName", "All")   
-          
-            FirstName: @Html.TextBox("firstName", "")<br/>
+            name: @Html.TextBox("name", Model.First().FirstName)
+            surname: @Html.DropDownList("surname", "All")<br/>
+
             <input type="submit" value="Filter"/>
         </p>
     }
@@ -28,37 +29,37 @@
 <table>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayName(Model.First().FirstName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SecondName)
+            @Html.DisplayName(Model.First().SecondName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayName(Model.First().Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AccountType)
+            @Html.DisplayName(Model.First().AccountType)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.BankMoney)
+            @Html.DisplayName(Model.First().State.BankMoney.ToString())
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.BankProcents)
+            @Html.DisplayName(Model.First().State.BankProcents.ToString())
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CreditMoney)
+            @Html.DisplayName(Model.First().State.CreditMoney.ToString())
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CreditProcents)
+            @Html.DisplayName(Model.First().State.CreditProcents.ToString())
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CreditCardID)
+            @Html.DisplayName(Model.First().State.CreditCardID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.PinCode)
+            @Html.DisplayName(Model.First().State.PinCode)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.State.CardMoney)
+            @Html.DisplayName(Model.First().State.CardMoney.ToString())
         </th>
         
         <th></th>
@@ -67,38 +68,38 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
+            @Html.DisplayFor(modelItem => ((Client)item).FirstName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SecondName)
+            @Html.DisplayFor(modelItem => ((Client)item).SecondName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Email)
+            @Html.DisplayFor(modelItem => ((Client)item).Email)
         </td>
         <td>
-            @Html.DisplayFor(model => item.AccountType)
+            @Html.DisplayFor(modelItem => ((Client)item).AccountType)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.BankMoney)
+            @Html.DisplayFor(modelItem => ((Client)item).State.BankMoney)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.BankProcents)
+            @Html.DisplayFor(modelItem => ((Client)item).State.BankProcents)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.CreditMoney)
+            @Html.DisplayFor(modelItem => ((Client)item).State.CreditMoney)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.CreditProcents)
+            @Html.DisplayFor(modelItem => ((Client)item).State.CreditProcents)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.CreditCardID)
+            @Html.DisplayFor(modelItem => ((Client)item).State.CreditCardID)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.State.PinCode)
+            @Html.DisplayFor(modelItem => ((Client)item).State.PinCode)
         </td>
 
         <td>
-            @Html.DisplayFor(modelItem => item.State.CreditMoney)
+            @Html.DisplayFor(modelItem => ((Client)item).State.CreditMoney)
         </td>
         
         <td>
