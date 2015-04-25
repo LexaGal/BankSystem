@@ -23,8 +23,13 @@
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("LogOut", "LogIn","Clients") </li>
+                            <li>@Html.ActionLink("Operations Log", "OperationsLog", "Admin") </li>
+                            <li>@Html.ActionLink("Clients", "Index", "Admin") </li>
+                            <li>@Html.ActionLink("Log Out", "LogIn", "Clients") </li>
                         </ul>
+                        <div style="border: black solid thin" align="center">
+                         You are logged in as Administrator
+                        </div>
                     </nav>
                 </div>
             </div>

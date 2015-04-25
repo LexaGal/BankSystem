@@ -12,6 +12,49 @@ namespace MvcMovie.Controllers
 {
     public class AdminController : Controller
     {
+        public ActionResult Search(FormCollection form)
+        {
+            var namesList = new List<string>();
+
+            var namesQry = from d in ClientsController.DataBase.Clients
+                           orderby d.SecondName
+                           select d.SecondName;
+
+            namesList.AddRange(namesQry.Distinct());
+            ViewBag.surname = new SelectList(namesList);
+
+            var clients = ClientsController.DataBase.Clients.ToList();
+
+            string name = form["name"];
+            string surname = form["surname"];
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                clients = clients.Where(s => s.FirstName.Contains(name)).ToList();
+            }
+
+            if (string.IsNullOrEmpty(surname))
+            {
+                if (!clients.Any())
+                {
+                    ModelState.AddModelError("surname", "No clients found. Some data is wrong");
+                }
+
+                return View(clients);
+            }
+
+            clients = clients.Where(x => x.SecondName == surname).ToList();
+
+            if (!clients.Any())
+            {
+                ModelState.AddModelError("surname", "No clients found. Some data is wrong");
+            }
+
+            return View(clients);
+            
+            return View(ClientsController.DataBase.Clients.ToList());
+        }
+
         public ActionResult Index()
         {
             if (ClientsController.DataBase == null)
@@ -103,6 +146,7 @@ namespace MvcMovie.Controllers
         public ActionResult Delete(int id = 0)
         {
             Client client = ClientsController.DataBase.Clients.Find(id);
+            
             if (client == null)
             {
                 return HttpNotFound();
@@ -136,5 +180,39 @@ namespace MvcMovie.Controllers
             //ClientsController.DataBase.Dispose();
             //base.Dispose(disposing);
         }
+
+
+        public ActionResult OperationsLog()
+        {
+            if (ClientsController.DataBase == null)
+            {
+                ClientsController.DataBase = new ClientsDbContext();
+            }
+
+            return View(ClientsController.DataBase.Operations.ToList());
+        }
+
+        public ActionResult DeleteLog(int id = 0)
+        {
+            OperationLogger logger = ClientsController.DataBase.Operations.Find(id);
+
+            if (logger == null)
+            {
+                return HttpNotFound();
+            }
+            return View(logger);
+        }
+
+
+        [HttpPost, ActionName("DeleteLog")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteLogConfirmed(int id)
+        {
+            OperationLogger logger = ClientsController.DataBase.Operations.Find(id);
+            ClientsController.DataBase.Operations.Remove(logger);
+            ClientsController.DataBase.SaveChanges();
+            return RedirectToAction("OperationsLog", "Admin");
+        }
+
     }
 }

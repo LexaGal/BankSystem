@@ -10,50 +10,50 @@
 
 <p>
     @Html.ActionLink("Create New", "Create", "Admin")
-    @Html.ActionLink("Search", "AllClients", "ClientsList")
+    @Html.ActionLink("Search", "Search", "Admin")
 
 </p>
 <table>
     <tr>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.SecondName)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.Email)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.Password)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.AccountType)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.BankID)
         </th>
         
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.BankMoney)
         </th>
         
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.BankProcents)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.CreditMoney)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.CreditProcents)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.CreditCardID )
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.PinCode)
         </th>
-        <th>
+        <th align="center" style="border: gray solid thin">
             @Html.DisplayNameFor(model => model.State.CardMoney)
         </th>
         
@@ -64,49 +64,49 @@
     {
         <tr>
             
-            <td>
+            <td align="center" style="border: gray solid thin">
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
-            <td>
+            <td align="center" style="border: gray solid thin">
                 @Html.DisplayFor(modelItem => item.SecondName)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.AccountType)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.BankID)
             </td>
             
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.BankMoney)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.BankProcents)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.CreditMoney)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.CreditProcents)
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.CreditCardID )
             </td>
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.PinCode)
             </td>
 
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.DisplayFor(modelItem => item.State.CardMoney)
             </td>
             
-            <td>
+            <td align="center" style="border: black solid thin">
                 @Html.ActionLink("Delete", "Delete", new {id = item.ID})
             </td>
         </tr>

@@ -70,13 +70,14 @@ namespace MvcMovie.Controllers
 
                     RouteValueDictionary rvd = new RouteValueDictionary(client);
 
-                    this.Session["client"] = client;
+                    Session["client"] = client;
 
                     return  RedirectToAction("Index", "Clients", rvd);
                 }
-                
-                ModelState.AddModelError("Password" ,"Some fields are wrong");
-                
+
+                ModelState.AddModelError("FirstName", "Field may be wrong");
+                ModelState.AddModelError("SecondName", "Field may be wrong");
+                ModelState.AddModelError("Password", "Field may be wrong");
             }
 
             return View(client);
@@ -216,46 +217,47 @@ namespace MvcMovie.Controllers
 
         //-------------------------------------------------------------------------------------------------
 
-        public ActionResult SearchIndex(string surname, string name)
-        {
-            var namesList = new List<string>();
+        //public ActionResult SearchIndex(string surname, string name)
+        //{
+        //    return View(DataBase.Clients.ToList());
+        //    var namesList = new List<string>();
 
-            var namesQry = from d in DataBase.Clients
-                           orderby d.SecondName
-                           select d.SecondName;
+        //    var namesQry = from d in DataBase.Clients
+        //                   orderby d.SecondName
+        //                   select d.SecondName;
             
-            namesList.AddRange(namesQry.Distinct());
-            ViewBag.surname = new SelectList(namesList.AsEnumerable());
+        //    namesList.AddRange(namesQry.Distinct());
+        //    ViewBag.surname = new SelectList(namesList.AsEnumerable());
 
-            var clients = DataBase.Clients.AsEnumerable();
+        //    var clients = DataBase.Clients.AsEnumerable();
 
-            if (!String.IsNullOrEmpty(name))
-            {
-                clients = clients.Where(s => s.FirstName.Contains(name));
-            }
+        //    if (!String.IsNullOrEmpty(name))
+        //    {
+        //        clients = clients.Where(s => s.FirstName.Contains(name));
+        //    }
 
-            IEnumerable<Client> enumerable = clients as IList<Client> ?? clients.ToList();
+        //    IEnumerable<Client> enumerable = clients as IList<Client> ?? clients.ToList();
 
-            if (string.IsNullOrEmpty(surname))
-            {
-                if (!enumerable.Any())
-                {
-                    ModelState.AddModelError("surname", "No clients found. Some data is wrong");
-                }
+        //    if (string.IsNullOrEmpty(surname))
+        //    {
+        //        if (!enumerable.Any())
+        //        {
+        //            ModelState.AddModelError("surname", "No clients found. Some data is wrong");
+        //        }
 
-                return View(enumerable.ToArray());
-            }
+        //        return View(enumerable.ToArray());
+        //    }
 
-             enumerable = enumerable.Where(x => x.SecondName == surname);
+        //     enumerable = enumerable.Where(x => x.SecondName == surname);
 
-            if (!enumerable.Any())
-            {
-                ModelState.AddModelError("surname", "No clients found. Some data is wrong");
-            }
+        //    if (!enumerable.Any())
+        //    {
+        //        ModelState.AddModelError("surname", "No clients found. Some data is wrong");
+        //    }
 
-            return View(enumerable.ToArray());
+        //    return View(enumerable.ToArray());
             
-        }
+        //}
 
         //-------------------------------------------------------------------------------------------------
 
@@ -283,7 +285,17 @@ namespace MvcMovie.Controllers
         public ActionResult PutMoney(FormCollection form)
         {
             string bankID = form["BankID"];
-            int sum = int.Parse(form["Sum"]);
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
  
             List<Client> list = DataBase.Clients.ToList();
 
@@ -309,6 +321,7 @@ namespace MvcMovie.Controllers
             OperationLogger operation = new OperationLogger
             {
                 OperationType = "Put",
+                LogDateTime = DateTime.Now,
                 SourceBankID = bankClient.State.BankID,
                 SourceCardID = "-",
                 DestinationBankID = "-",
@@ -337,8 +350,18 @@ namespace MvcMovie.Controllers
         {
             string bankID = form["BankID"];
             string creditCardID = form["CreditCardID"];
-            int sum = int.Parse(form["Sum"]);
- 
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+
             List<Client> list = DataBase.Clients.ToList();
 
             var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0
@@ -364,6 +387,7 @@ namespace MvcMovie.Controllers
             OperationLogger operation = new OperationLogger
             {
                 OperationType = "Transfer",
+                LogDateTime = DateTime.Now,
                 SourceBankID = bankClient.State.BankID,
                 SourceCardID = "-",
                 DestinationBankID = "-",
@@ -392,7 +416,17 @@ namespace MvcMovie.Controllers
         {
             string bankID = form["BankID"];
             string creditCardID = form["CreditCardID"];
-            int sum = int.Parse(form["Sum"]);
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
 
             List<Client> list = DataBase.Clients.ToList();
 
@@ -419,6 +453,7 @@ namespace MvcMovie.Controllers
             OperationLogger operation = new OperationLogger
             {
                 OperationType = "Transfer",
+                LogDateTime = DateTime.Now,
                 SourceBankID = "-",
                 SourceCardID = bankClient.State.CreditCardID,
                 DestinationBankID = bankClient.State.BankID,
@@ -445,7 +480,17 @@ namespace MvcMovie.Controllers
         public ActionResult TakeCredit(FormCollection form)
         {
             string bankID = form["BankID"];
-            int sum = int.Parse(form["Sum"]);
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
 
             List<Client> list = DataBase.Clients.ToList();
 
@@ -465,6 +510,7 @@ namespace MvcMovie.Controllers
             OperationLogger operation = new OperationLogger
             {
                 OperationType = "Take",
+                LogDateTime = DateTime.Now,
                 SourceBankID = "-",
                 SourceCardID = "-",
                 DestinationBankID = bankClient.State.BankID,
@@ -493,7 +539,17 @@ namespace MvcMovie.Controllers
         {
             string bankID1 = form["BankID1"];
             string BankID2 = form["BankID2"];
-            int sum = int.Parse(form["Sum"]);
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
 
             List<Client> list = DataBase.Clients.ToList();
 
@@ -535,6 +591,7 @@ namespace MvcMovie.Controllers
             OperationLogger operation = new OperationLogger
             {
                 OperationType = "Transfer",
+                LogDateTime = DateTime.Now,
                 SourceBankID = bankClient1.State.BankID,
                 SourceCardID = "-",
                 DestinationBankID = bankClient2.State.BankID,
@@ -561,8 +618,19 @@ namespace MvcMovie.Controllers
         public ActionResult PayCredit(FormCollection form)
         {
             string bankID = form["BankID"];
-            int sum = int.Parse(form["Sum"]);
 
+            int sum;
+
+            try
+            {
+                sum = int.Parse(form["Sum"]);
+            }
+            catch (FormatException)
+            {
+                ModelState.AddModelError("Sum", "Entered wrong sum");
+                return View();
+            }
+            
             List<Client> list = DataBase.Clients.ToList();
 
             var bankClient = list.FirstOrDefault(p => String.CompareOrdinal(p.State.BankID, bankID) == 0);
@@ -588,6 +656,7 @@ namespace MvcMovie.Controllers
                 OperationLogger operation = new OperationLogger
                 {
                     OperationType = "Pay",
+                    LogDateTime = DateTime.Now,
                     SourceBankID = bankClient.State.BankID,
                     SourceCardID = "-",
                     DestinationBankID = "-",

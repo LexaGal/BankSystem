@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace MvcMovie.Models
 {
@@ -11,6 +12,9 @@ namespace MvcMovie.Models
     {
         [Key]
         public int ID { get; set; }
+
+        [DisplayName("Date/Time  ")]
+        public DateTime LogDateTime { get; set; }
 
         [Required]
         [DisplayName("Type  ")]

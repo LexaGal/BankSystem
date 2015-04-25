@@ -26,14 +26,24 @@
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-
-                            <li>@Html.ActionLink("LogOut", "LogIn", "Clients") </li>
+                            <li>@Html.ActionLink("Log Out", "LogIn", "Clients") </li>
                         </ul>
+                        <div style="border: black solid thin" align="center">
+                         You are logged in as
+                            @{
+                                if (Session["client"] != null)
+                                {
+                                    var client = (Client) HttpContext.Current.Session["client"];
 
-                        <div>
-                            You are logged in as @Html.DisplayFor(model => model.FirstName)
-                            @Html.DisplayFor(model => model.SecondName)
-                        </div>
+                                    @String.Format("{0} {1}", client.FirstName, client.SecondName);
+                                }
+
+                                else
+                                {
+                                    Response.RedirectPermanent("~/Clients/LogIn", false);
+                                }
+                            }
+                       </div>
                     </nav>
                 </div>
             </div>

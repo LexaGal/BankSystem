@@ -1,23 +1,32 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace MvcMovie.Models
 {
     public class AccountState
     {
+        [DisplayName("BankID  ")]
         public string BankID { get; set; }
 
-        public string CreditCardID { get; private set; }
+        [DisplayName("CardID  ")]
+        public string CreditCardID { get; set; }
 
-        public string PinCode { get; private set; }
+        [DisplayName("Pin  ")]
+        public string PinCode { get; set; }
 
+        [DisplayName("Card[rub.]  ")]
         public int CardMoney { get; set; }
 
+        [DisplayName("Bank[rub.]  ")]
         public int BankMoney { get; set; }
 
+        [DisplayName("Credit[rub.]  ")]
         public int CreditMoney { get; set; }
 
+        [DisplayName("Bank[%]  ")]
         public int BankProcents { get; set; }
 
+        [DisplayName("Credit[%]  ")]
         public int CreditProcents { get; set; }
 
         public AccountState()

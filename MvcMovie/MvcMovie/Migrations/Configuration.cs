@@ -241,6 +241,7 @@ namespace MvcMovie.Migrations
                 new OperationLogger
                 {
                     ID = 1,
+                    LogDateTime = DateTime.Now,
                     OperationType = "Put",
                     SourceBankID = "2312reui",
                     SourceCardID = "-",
