@@ -1,0 +1,54 @@
+﻿@*@model MvcMovie.Models.CurrencyConvertor*@
+
+@{
+    ViewBag.Title = "CurrencyConvertor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Put</legend>
+
+        <table>
+            <tr>
+            <th>
+                    @Html.Label("From: ")
+            </th>
+            <th>
+                    @Html.DropDownList("From", new SelectList(
+                        new List<Object> {"USD", "EUR", "RUB", "BYR"}))
+            </th>
+                
+            <th>
+            
+                    @InputExtensions.TextBox(Html, "SumFrom", ViewBag.Sum)
+            </th>
+
+            <th>
+                <input type="submit" value="Convert" />
+            </th>
+            <th>
+
+                    @Html.Label("To: ")
+            </th>
+            <th>
+            
+                    @Html.DropDownList("To", new SelectList(
+                        new List<Object> {"USD", "EUR", "RUB", "BYR"}))
+            </th>
+                
+                <th>
+                    @InputExtensions.TextBox(Html, "SumTo", ViewBag.SumReturn)
+
+                </th>
+            </tr>
+        </table>
+        
+    </fieldset>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

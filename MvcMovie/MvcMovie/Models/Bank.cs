@@ -19,7 +19,7 @@ namespace MvcMovie.Models
 
         public static BankLottery Lottery { get; set; }
 
-        public static RubToDollarConvertor Convertor { get; set; }
+        public static CurrencyConvertor Convertor { get; set; }
 
         public static void Initialize()
         {
@@ -29,31 +29,9 @@ namespace MvcMovie.Models
             //DataBase = new ClientsDbContext();
             Offers = new List<Offer>();
             Lottery = new BankLottery(100, 100);
-            Convertor = new RubToDollarConvertor();
+            Convertor = new CurrencyConvertor();
         }
 
-    }
-
-    public class RubToDollarConvertor
-    {
-        public static double RubToDollarCoefficient { get; private set; }
-
-        public static double SetCoefficient(double coeff)
-        {
-            RubToDollarCoefficient = coeff;
-
-            return RubToDollarCoefficient;
-        }
-
-        public static double ConvertToDollars(int rubs)
-        {
-            return rubs*RubToDollarCoefficient;
-        }
-
-        public static int ConvertToRubs(double dollars)
-        {
-            return (int) (dollars/RubToDollarCoefficient);
-        }
     }
 
     public class BankLottery

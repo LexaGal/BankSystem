@@ -217,50 +217,6 @@ namespace MvcMovie.Controllers
 
         //-------------------------------------------------------------------------------------------------
 
-        //public ActionResult SearchIndex(string surname, string name)
-        //{
-        //    return View(DataBase.Clients.ToList());
-        //    var namesList = new List<string>();
-
-        //    var namesQry = from d in DataBase.Clients
-        //                   orderby d.SecondName
-        //                   select d.SecondName;
-            
-        //    namesList.AddRange(namesQry.Distinct());
-        //    ViewBag.surname = new SelectList(namesList.AsEnumerable());
-
-        //    var clients = DataBase.Clients.AsEnumerable();
-
-        //    if (!String.IsNullOrEmpty(name))
-        //    {
-        //        clients = clients.Where(s => s.FirstName.Contains(name));
-        //    }
-
-        //    IEnumerable<Client> enumerable = clients as IList<Client> ?? clients.ToList();
-
-        //    if (string.IsNullOrEmpty(surname))
-        //    {
-        //        if (!enumerable.Any())
-        //        {
-        //            ModelState.AddModelError("surname", "No clients found. Some data is wrong");
-        //        }
-
-        //        return View(enumerable.ToArray());
-        //    }
-
-        //     enumerable = enumerable.Where(x => x.SecondName == surname);
-
-        //    if (!enumerable.Any())
-        //    {
-        //        ModelState.AddModelError("surname", "No clients found. Some data is wrong");
-        //    }
-
-        //    return View(enumerable.ToArray());
-            
-        //}
-
-        //-------------------------------------------------------------------------------------------------
-
         protected override void Dispose(bool disposing)
         {
             //DataBase.Dispose();
@@ -269,7 +225,7 @@ namespace MvcMovie.Controllers
 
         //-------------------------------------------------------------------------------------------------
 
-        public ActionResult Operations()
+        public ActionResult Operations(Client client)
         {
             return View();
         }
@@ -471,6 +427,13 @@ namespace MvcMovie.Controllers
 
         public ActionResult TakeCredit()
         {
+            if (((Client)Session["client"]).AccountType != "Premium")
+            {
+                Session.Add("error", new ErrorNotifier {Source = "take"});
+
+                return RedirectToAction("Error", "Clients", (ErrorNotifier)Session["error"]);
+            }
+            
             return View();
         }
 
@@ -530,6 +493,12 @@ namespace MvcMovie.Controllers
 
         public ActionResult TransferMoneyFromBankIDToBankID()
         {
+            if (((Client)Session["client"]).AccountType != "Premium")
+            {
+                Session.Add("error", new ErrorNotifier { Source = "transfer" });
+
+                return RedirectToAction("Error", "Clients", (ErrorNotifier)Session["error"]);
+            }
             return View();
         }
         
@@ -610,6 +579,12 @@ namespace MvcMovie.Controllers
 
         public ActionResult PayCredit()
         {
+            if (((Client)Session["client"]).AccountType != "Premium")
+            {
+                Session.Add("error", new ErrorNotifier { Source = "pay" });
+
+                return RedirectToAction("Error", "Clients", (ErrorNotifier)Session["error"]);
+            }
             return View();
         }
         
@@ -679,5 +654,35 @@ namespace MvcMovie.Controllers
             return RedirectToAction("Index", "Clients", new RouteValueDictionary(bankClient));
 
         }
+
+        public ActionResult Error()
+        {
+
+            ErrorNotifier notifier = (ErrorNotifier)Session["error"];
+
+            if (notifier != null)
+            {
+                switch (notifier.Source)
+                {
+                    case "take":
+                        notifier.Message = "You cannot take credit";
+                        notifier.Description = "You must have Premium type of accout to take/pay credits. To change it, link to";
+                        break;
+                    case "pay":
+                        notifier.Message = "You cannot pay credit";
+                        notifier.Description = "You must have Premium type of accout to take/pay credits. To change it, link to";
+                        break;
+                    case "transfer":
+                        notifier.Message = "You cannot transfer your money";
+                        notifier.Description = "You must have Premium type of accout to transfer your money from BankID to BankID. To change it, link to";
+                        break;
+                }
+
+                return View(notifier);
+            }
+            return RedirectToAction("TakeCredit", "Clients");
+        }
+
+        
     }
 }

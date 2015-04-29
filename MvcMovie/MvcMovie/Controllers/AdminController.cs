@@ -17,8 +17,8 @@ namespace MvcMovie.Controllers
             var namesList = new List<string>();
 
             var namesQry = from d in ClientsController.DataBase.Clients
-                           orderby d.SecondName
-                           select d.SecondName;
+                orderby d.SecondName
+                select d.SecondName;
 
             namesList.AddRange(namesQry.Distinct());
             ViewBag.surname = new SelectList(namesList);
@@ -51,8 +51,7 @@ namespace MvcMovie.Controllers
             }
 
             return View(clients);
-            
-            return View(ClientsController.DataBase.Clients.ToList());
+
         }
 
         public ActionResult Index()
